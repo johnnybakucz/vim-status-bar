@@ -14,10 +14,18 @@
   "contributes": {
     "commands": [
       {
-        "command": "vim-status-bar.helloWorld",
-        "title": "Hello World"
+        "command": "vim-status-bar.toggle",
+        "title": "Toggle status bar coloring for vim mode"
       }
+
     ]
+  },
+  "extensionDependencies": [
+    "be5invis.vscode-custom-css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnnybakucz/vim-status-bar"
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
