@@ -1,17 +1,15 @@
+#workbench.parts.statusbar:has([aria-label="-- NORMAL --"]) {
+	background-color: #27981a !important;
+}
 
-			#workbench.parts.statusbar:has([aria-label="-- NORMAL --"]) {
-				background-color: #27981a !important;
-			}
+#workbench.parts.statusbar:has([aria-label="-- INSERT --"]) {
+	background-color: #de080f !important;
+}
 
-			#workbench.parts.statusbar:has([aria-label="-- INSERT --"]) {
-				background-color: #de080f !important;
-			}
+#workbench.parts.statusbar:has([aria-label="-- VISUAL --"]) {
+	background-color: #8362b1 !important;
+}
 
-			#workbench.parts.statusbar:has([aria-label="-- VISUAL --"]) {
-				background-color: #8362b1 !important;
-			}
-
-			#workbench.parts.statusbar:has([aria-label="-- VISUAL LINE --"]) {
-				background-color: #62b1b1 !important;
-			}
-		 
+#workbench.parts.statusbar:has([aria-label="-- VISUAL LINE --"]) {
+	background-color: #62b1b1 !important;
+}

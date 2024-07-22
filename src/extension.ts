@@ -1,6 +1,5 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
@@ -17,24 +16,6 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log('NOT ACTIVE!!!');
 		}
 
-		const cssContent = `
-			#workbench\.parts\.statusbar:has([aria-label="-- NORMAL --"]) {
-				background-color: #27981a !important;
-			}
-
-			#workbench\.parts\.statusbar:has([aria-label="-- INSERT --"]) {
-				background-color: #de080f !important;
-			}
-
-			#workbench\.parts\.statusbar:has([aria-label="-- VISUAL --"]) {
-				background-color: #8362b1 !important;
-			}
-
-			#workbench\.parts\.statusbar:has([aria-label="-- VISUAL LINE --"]) {
-				background-color: #62b1b1 !important;
-			}
-		 `;
-
 		function findExtensionPath(extensionId: string): string | undefined {
 			const extension = vscode.extensions.getExtension(extensionId) || vscode.extensions.getExtension('undefined_publisher.' + extensionId.split('.')[1]);
 			return extension?.extensionPath;
@@ -44,35 +25,27 @@ export function activate(context: vscode.ExtensionContext) {
 			const config = vscode.workspace.getConfiguration();
 			const currentImports = config.get('vscode_custom_css.imports') as string[];
 
+			// Add the file to the settings if it's not already there
 			if (!currentImports.includes(fileUri)) {
-				const newImports = [...currentImports, fileUri];
-
-				config.update('vscode_custom_css.imports', newImports, vscode.ConfigurationTarget.Global)
+				config.update('vscode_custom_css.imports', [...currentImports, fileUri], vscode.ConfigurationTarget.Global)
 					.then(() => {
+						vscode.commands.executeCommand('extension.updateCustomCSS');
+						vscode.commands.executeCommand('workbench.action.reloadWindow');
 						vscode.window.showInformationMessage('Settings updated successfully. Please reload VS Code for changes to take effect.');
 					}, (error) => {
 						vscode.window.showErrorMessage('Failed to update settings: ' + error);
 					});
 			} else {
 				vscode.window.showInformationMessage('CSS file is already in settings.');
+				vscode.commands.executeCommand('workbench.action.reloadWindow');
 			}
-			vscode.commands.executeCommand('extension.updateCustomCSS');
-			vscode.commands.executeCommand('workbench.action.reloadWindow');
 		}
 
 		// Define the file path
 		let filePath = findExtensionPath('johnnybakucz.vim-status-bar');
 		if (filePath) {
 			filePath = path.join(filePath, '/vim-status-bar.css');
-			// Write the CSS content to the file
-			fs.writeFile(filePath, cssContent, (err) => {
-				if (err) {
-					vscode.window.showErrorMessage('Failed to create CSS file: ' + err.message);
-				} else {
-					vscode.window.showInformationMessage('CSS file created successfully at: ' + filePath);
-					updateUserSettings(`file://${filePath}` || '');
-				}
-			});
+			updateUserSettings(`file://${filePath}`);
 		}
 	});
 
