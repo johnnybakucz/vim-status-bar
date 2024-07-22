@@ -1,7 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
@@ -12,12 +11,11 @@ export function activate(context: vscode.ExtensionContext) {
 		let customCssExtension = vscode.extensions.getExtension('be5invis.vscode-custom-css');
 
 		if (customCssExtension?.isActive) {
-
+			console.log('ACTIVE!!!');
 		} else {
 			customCssExtension?.activate();
+			console.log('NOT ACTIVE!!!');
 		}
-
-		vscode.window.showInformationMessage('Hello World from vim-status-bar!');
 
 		const cssContent = `
 			#workbench\.parts\.statusbar:has([aria-label="-- NORMAL --"]) {
@@ -37,28 +35,29 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		 `;
 
-		function getGlobalVSCodePath(): string {
-			const homeDir = os.homedir();
-			let vscodePath: string;
-
-			switch (process.platform) {
-				case 'win32':
-					vscodePath = path.join(homeDir, 'AppData', 'Roaming', 'Code');
-					break;
-				case 'darwin':
-					vscodePath = path.join(homeDir, 'Library', 'Application Support', 'Code');
-					break;
-				default: // linux and others
-					vscodePath = path.join(homeDir, '.config', 'Code');
-					break;
-			}
-
-			return vscodePath;
-		}
-
 		function findExtensionPath(extensionId: string): string | undefined {
 			const extension = vscode.extensions.getExtension(extensionId) || vscode.extensions.getExtension('undefined_publisher.' + extensionId.split('.')[1]);
 			return extension?.extensionPath;
+		}
+
+		function updateUserSettings(fileUri: string) {
+			const config = vscode.workspace.getConfiguration();
+			const currentImports = config.get('vscode_custom_css.imports') as string[];
+
+			if (!currentImports.includes(fileUri)) {
+				const newImports = [...currentImports, fileUri];
+
+				config.update('vscode_custom_css.imports', newImports, vscode.ConfigurationTarget.Global)
+					.then(() => {
+						vscode.window.showInformationMessage('Settings updated successfully. Please reload VS Code for changes to take effect.');
+					}, (error) => {
+						vscode.window.showErrorMessage('Failed to update settings: ' + error);
+					});
+			} else {
+				vscode.window.showInformationMessage('CSS file is already in settings.');
+			}
+			vscode.commands.executeCommand('extension.updateCustomCSS');
+			vscode.commands.executeCommand('workbench.action.reloadWindow');
 		}
 
 		// Define the file path
@@ -71,9 +70,13 @@ export function activate(context: vscode.ExtensionContext) {
 					vscode.window.showErrorMessage('Failed to create CSS file: ' + err.message);
 				} else {
 					vscode.window.showInformationMessage('CSS file created successfully at: ' + filePath);
+					updateUserSettings(`file://${filePath}` || '');
 				}
 			});
 		}
+
+
+		let a = 3;
 	});
 
 	context.subscriptions.push(disposable);

@@ -15,7 +15,9 @@
     "commands": [
       {
         "command": "vim-status-bar.toggle",
-        "title": "Toggle status bar coloring for vim mode"
+        "title": "Toggle status bar coloring for vim mode",
+        "category": "Vim Status Bar",
+        "shortTitle": "Toggle"
       }
 
     ]
