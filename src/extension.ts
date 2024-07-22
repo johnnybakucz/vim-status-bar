@@ -74,9 +74,6 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			});
 		}
-
-
-		let a = 3;
 	});
 
 	context.subscriptions.push(disposable);
