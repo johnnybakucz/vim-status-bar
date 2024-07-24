@@ -3,6 +3,7 @@
   "displayName": "vim-status-bar",
   "publisher": "jonatanbakucz",
   "description": "Color the status bar according to the vim mode selected (Insert, Normal, etc.)",
+  "icon": "assets/logo-removebg-preview.png",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.91.0"
