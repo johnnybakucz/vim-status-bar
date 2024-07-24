@@ -1,6 +1,7 @@
 {
   "name": "vim-status-bar",
   "displayName": "vim-status-bar",
+  "publisher": "jonatanbakucz",
   "description": "Color the status bar according to the vim mode selected (Insert, Normal, etc.)",
   "version": "0.0.1",
   "engines": {

@@ -9,11 +9,8 @@ export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('vim-status-bar.toggle', () => {
 		let customCssExtension = vscode.extensions.getExtension('be5invis.vscode-custom-css');
 
-		if (customCssExtension?.isActive) {
-			console.log('ACTIVE!!!');
-		} else {
+		if (!customCssExtension?.isActive) {
 			customCssExtension?.activate();
-			console.log('NOT ACTIVE!!!');
 		}
 
 		function findExtensionPath(extensionId: string): string | undefined {
