@@ -26,20 +26,24 @@ export function activate(context: vscode.ExtensionContext) {
 			if (!currentImports.includes(fileUri)) {
 				config.update('vscode_custom_css.imports', [...currentImports, fileUri], vscode.ConfigurationTarget.Global)
 					.then(() => {
-						vscode.commands.executeCommand('extension.updateCustomCSS');
-						vscode.commands.executeCommand('workbench.action.reloadWindow');
-						vscode.window.showInformationMessage('Settings updated successfully. Please reload VS Code for changes to take effect.');
+						vscode.commands.executeCommand('extension.installCustomCSS');
+						vscode.commands.executeCommand('extension.installCustomCSS');
+						vscode.commands.executeCommand('extension.reloadCustomCSS');
+						vscode.commands.executeCommand('extension.reloadCustomCSS');
 					}, (error) => {
 						vscode.window.showErrorMessage('Failed to update settings: ' + error);
 					});
 			} else {
 				vscode.window.showInformationMessage('CSS file is already in settings.');
-				vscode.commands.executeCommand('workbench.action.reloadWindow');
+				vscode.commands.executeCommand('extension.installCustomCSS');
+				vscode.commands.executeCommand('extension.installCustomCSS');
+				vscode.commands.executeCommand('extension.reloadCustomCSS');
+				vscode.commands.executeCommand('extension.reloadCustomCSS');
 			}
 		}
 
 		// Define the file path
-		let filePath = findExtensionPath('johnnybakucz.vim-status-bar');
+		let filePath = findExtensionPath('jonatanbakucz.vim-status-bar');
 		if (filePath) {
 			filePath = path.join(filePath, '/vim-status-bar.css');
 			updateUserSettings(`file://${filePath}`);
@@ -50,4 +54,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {
+	vscode.commands.executeCommand('extension.unInstallCustomCSS');
+}
