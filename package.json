@@ -4,7 +4,7 @@
   "publisher": "jonatanbakucz",
   "description": "Color the status bar according to the vim mode selected (Insert, Normal, etc.)",
   "icon": "assets/logo-removebg-preview.png",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.91.0"
   },
