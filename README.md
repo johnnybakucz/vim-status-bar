@@ -11,6 +11,7 @@ This extension allows you to visually identify the current vim mode by changing 
 - Insert
 - Visual
 - Visual Block
+- Monokai color palette for the status bar
 
 ## Requirements
 
@@ -20,7 +21,8 @@ This extension requires the following to be installed:
 
 ## Extension Settings
 
-This extension contributes no settings:
+This extension contributes the following settings:
+- `vim-status-bar.useMonokai`: Enable Monokai color palette for the status bar
 
 ## Known Issues
 

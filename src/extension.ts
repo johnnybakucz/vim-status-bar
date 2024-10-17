@@ -1,10 +1,6 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('vim-status-bar.toggle', () => {
 		let customCssExtension = vscode.extensions.getExtension('be5invis.vscode-custom-css');
@@ -21,8 +17,12 @@ export function activate(context: vscode.ExtensionContext) {
 		function updateUserSettings(fileUri: string) {
 			const config = vscode.workspace.getConfiguration();
 			const currentImports = config.get('vscode_custom_css.imports') as string[];
+			const useMonokai = config.get('vim-status-bar.useMonokai') as boolean;
 
-			// Add the file to the settings if it's not already there
+			if (useMonokai) {
+				applyMonokaiColors();
+			}
+
 			if (!currentImports.includes(fileUri)) {
 				config.update('vscode_custom_css.imports', [...currentImports, fileUri], vscode.ConfigurationTarget.Global)
 					.then(() => {
@@ -42,7 +42,39 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 
-		// Define the file path
+		function applyMonokaiColors() {
+			const monokaiColors = {
+				normal: '#A6E22E',
+				insert: '#F92672',
+				visual: '#66D9EF',
+				visualLine: '#AE81FF',
+				visualBlock: '#FD971F'
+			};
+
+			const cssContent = `
+				#workbench\\.parts\\.statusbar:has([aria-label="-- NORMAL --"]) {
+					background-color: ${monokaiColors.normal} !important;
+				}
+				#workbench\\.parts\\.statusbar:has([aria-label="-- INSERT --"]) {
+					background-color: ${monokaiColors.insert} !important;
+				}
+				#workbench\\.parts\\.statusbar:has([aria-label="-- VISUAL --"]) {
+					background-color: ${monokaiColors.visual} !important;
+				}
+				#workbench\\.parts\\.statusbar:has([aria-label="-- VISUAL LINE --"]) {
+					background-color: ${monokaiColors.visualLine} !important;
+				}
+				#workbench\\.parts\\.statusbar:has([aria-label="-- VISUAL BLOCK --"]) {
+					background-color: ${monokaiColors.visualBlock} !important;
+				}
+			`;
+
+			const filePath = path.join(context.extensionPath, 'monokai-status-bar.css');
+			const fs = require('fs');
+			fs.writeFileSync(filePath, cssContent);
+			updateUserSettings(`file://${filePath}`);
+		}
+
 		let filePath = findExtensionPath('jonatanbakucz.vim-status-bar');
 		if (filePath) {
 			filePath = path.join(filePath, '/vim-status-bar.css');
@@ -53,7 +85,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {
 	vscode.commands.executeCommand('extension.unInstallCustomCSS');
 }
