@@ -21,7 +21,18 @@
         "category": "Vim Status Bar",
         "shortTitle": "Toggle"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Vim Status Bar",
+      "properties": {
+        "vim-status-bar.useMonokai": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable Monokai color palette for the status bar"
+        }
+      }
+    }
   },
   "extensionDependencies": [
     "be5invis.vscode-custom-css"
