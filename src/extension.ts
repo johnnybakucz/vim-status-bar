@@ -14,14 +14,24 @@ export function activate(context: vscode.ExtensionContext) {
 			return extension?.extensionPath;
 		}
 
-		function updateUserSettings(fileUri: string) {
+		function updateUserSettings() {
 			const config = vscode.workspace.getConfiguration();
 			const currentImports = config.get('vscode_custom_css.imports') as string[];
+
+			// Remove old css file
+			currentImports.filter((importPath) => !importPath.includes('vim-status-bar.css'));
+
 			const useMonokai = config.get('vim-status-bar.useMonokai') as boolean;
 
+
+			let cssFilePath = findExtensionPath('jonatanbakucz.vim-status-bar') as string;
 			if (useMonokai) {
-				applyMonokaiColors();
+				cssFilePath = path.join(cssFilePath, '/monokai-vim-status-bar.css');
+			} else {
+				cssFilePath = path.join(cssFilePath, '/vim-status-bar.css');
 			}
+
+			let fileUri = `file://${cssFilePath}`;
 
 			if (!currentImports.includes(fileUri)) {
 				config.update('vscode_custom_css.imports', [...currentImports, fileUri], vscode.ConfigurationTarget.Global)
@@ -42,44 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 
-		function applyMonokaiColors() {
-			const monokaiColors = {
-				normal: '#A6E22E',
-				insert: '#F92672',
-				visual: '#66D9EF',
-				visualLine: '#AE81FF',
-				visualBlock: '#FD971F'
-			};
-
-			const cssContent = `
-				#workbench\\.parts\\.statusbar:has([aria-label="-- NORMAL --"]) {
-					background-color: ${monokaiColors.normal} !important;
-				}
-				#workbench\\.parts\\.statusbar:has([aria-label="-- INSERT --"]) {
-					background-color: ${monokaiColors.insert} !important;
-				}
-				#workbench\\.parts\\.statusbar:has([aria-label="-- VISUAL --"]) {
-					background-color: ${monokaiColors.visual} !important;
-				}
-				#workbench\\.parts\\.statusbar:has([aria-label="-- VISUAL LINE --"]) {
-					background-color: ${monokaiColors.visualLine} !important;
-				}
-				#workbench\\.parts\\.statusbar:has([aria-label="-- VISUAL BLOCK --"]) {
-					background-color: ${monokaiColors.visualBlock} !important;
-				}
-			`;
-
-			const filePath = path.join(context.extensionPath, 'monokai-status-bar.css');
-			const fs = require('fs');
-			fs.writeFileSync(filePath, cssContent);
-			updateUserSettings(`file://${filePath}`);
-		}
-
-		let filePath = findExtensionPath('jonatanbakucz.vim-status-bar');
-		if (filePath) {
-			filePath = path.join(filePath, '/vim-status-bar.css');
-			updateUserSettings(`file://${filePath}`);
-		}
+		updateUserSettings();
 	});
 
 	context.subscriptions.push(disposable);

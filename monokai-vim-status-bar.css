@@ -1,19 +1,19 @@
 #workbench\.parts\.statusbar:has([aria-label="-- NORMAL --"]) {
-    background-color: #27981a !important;
+    background-color: #77a221 !important;
 }
 
 #workbench\.parts\.statusbar:has([aria-label="-- INSERT --"]) {
-    background-color: #de080f !important;
+    background-color: #b31b53 !important;
 }
 
 #workbench\.parts\.statusbar:has([aria-label="-- VISUAL --"]) {
-    background-color: #8362b1 !important;
+    background-color: #4a9cac !important;
 }
 
 #workbench\.parts\.statusbar:has([aria-label="-- VISUAL LINE --"]) {
-    background-color: #62b1b1 !important;
+    background-color: #8361c1 !important;
 }
 
 #workbench\.parts\.statusbar:has([aria-label="-- VISUAL BLOCK --"]) {
-    background-color: #ab5998 !important;
+    background-color: #bd6f17 !important;
 }
